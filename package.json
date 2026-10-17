@@ -2,9 +2,8 @@
   "name": "tp_hibridas",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "node --watch --env-file=.env src/servicios/servidor.js"
   },
   "keywords": [],
   "author": "",
