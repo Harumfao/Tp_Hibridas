@@ -1,18 +1,12 @@
 {
   "name": "tp_hibridas",
   "version": "1.0.0",
-  "description": "",
-  "scripts": {
-    "dev": "node --watch --env-file=.env src/servicios/servidor.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "node --watch --env-file=.env src/servidor.js"
+  },
   "dependencies": {
     "express": "^5.2.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.14"
   }
 }

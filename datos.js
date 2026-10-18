@@ -1,5 +1,6 @@
 export const camposIniciales = [
     {
+        id: 1,
         nombre: 'Saigon',
         ubicacion: 'Quilmes',
         contacto: '1146731893',
@@ -10,6 +11,7 @@ export const camposIniciales = [
         disponibilidad: true
     },
     {
+        id: 2,
         nombre: 'Delta Airsoft',
         ubicacion: 'Berazategui',
         contacto: '1122334455',
@@ -20,6 +22,7 @@ export const camposIniciales = [
         disponibilidad: false
     },
     {
+        id: 3,
         nombre: 'The Jungle',
         ubicacion: 'La Plata',
         contacto: '1199887766',
@@ -29,4 +32,10 @@ export const camposIniciales = [
         verificado: false,
         disponibilidad: true
     }
-];
+]
+
+export let nextId = 6;
+
+export function siguienteId() {
+  return nextId++;
+}
