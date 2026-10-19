@@ -9,4 +9,7 @@ rutasDeCampos.param('id', (req, res, next, id) => {
 });
 
 rutasDeCampos.get('/',controlador.listar);
-rutasDeCampos.get('/:id', controlador.obtener);
+rutasDeCampos.get('/:id', controlador.obtenerCampo);
+rutasDeCampos.post('/', controlador.crearCampo);
+rutasDeCampos.delete('/:id',controlador.eliminarCampo);
+rutasDeCampos.patch('/:id',controlador.modificarCampo);
