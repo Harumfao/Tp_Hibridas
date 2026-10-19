@@ -21,3 +21,8 @@ export function eliminarCampo (req, res){
 export function modificarCampo(req,res){
     res.json(campo.modificarCampo(req.idCampo, req.body ?? {}));
 }
+
+export function organizarCampo (req, res){
+    const resultado = campo.organizarCampo(req.idCampo);
+    return res.json(resultado);
+}

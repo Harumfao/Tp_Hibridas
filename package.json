@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "node --watch --env-file=.env src/servidor.js"
+    "dev": "node --watch --env-file=.env src/servidor.js",
+    "start": "node --env-file=.env src/servidor.js"
   },
   "dependencies": {
     "express": "^5.2.1"

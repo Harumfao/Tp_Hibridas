@@ -13,3 +13,4 @@ rutasDeCampos.get('/:id', controlador.obtenerCampo);
 rutasDeCampos.post('/', controlador.crearCampo);
 rutasDeCampos.delete('/:id',controlador.eliminarCampo);
 rutasDeCampos.patch('/:id',controlador.modificarCampo);
+rutasDeCampos.post('/:id/organizar',controlador.organizarCampo);

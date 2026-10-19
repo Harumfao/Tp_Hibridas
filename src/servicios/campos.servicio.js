@@ -44,3 +44,11 @@ export function modificarCampo(id, modificacion){
     Object.assign(camposIniciales,campoModificado);
     return camposIniciales;
 }
+
+export function organizarCampo (id){
+    const campo = obtenerCampo(id);
+    if (campo.disponibilidad === true) {
+        campo.disponibilidad = false;
+        return {mensaje:`Alquilaste el campo ${campo.nombre}`}
+    }
+}
