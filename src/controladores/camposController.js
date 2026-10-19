@@ -1,6 +1,9 @@
-import { camposIniciales } from '../../datos.js';
+import * as campo from '../servicios/campos.servicio.js';
 
-export function obtenerCampos(req,res) {
-    const campos = camposIniciales;
-    return res.json(campos);
+export function listar (req, res) {
+    res.json(campo.listar(req.query));
+}
+
+export function obtener(req, res){
+    res.json(campo.obtener(req.idCampo));
 }

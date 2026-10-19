@@ -34,7 +34,7 @@ export const camposIniciales = [
     }
 ]
 
-export let nextId = 6;
+export let nextId = 4;
 
 export function siguienteId() {
   return nextId++;
