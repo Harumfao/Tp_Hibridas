@@ -4,7 +4,7 @@ import * as controlador from '../controladores/camposController.js';
 export const rutasDeCampos = Router();
 
 rutasDeCampos.param('id', (req, res, next, id) => {
-    req.idCampo = Number(id);
+    req.idCampo = id;
     next();
 });
 

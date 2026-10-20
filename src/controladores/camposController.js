@@ -1,28 +1,30 @@
 import * as campo from '../servicios/campos.servicio.js';
 
-export function listar (req, res) {
-    res.json(campo.listar(req.query));
+export async function listar (req, res) {
+    const resultado = await campo.listar(req.query);
+    res.json(resultado);
 }
 
-export function obtenerCampo(req, res){
-    res.json(campo.obtenerCampo(req.idCampo));
+export async function obtenerCampo(req, res){
+    const resultado = await campo.obtenerCampo(req.idCampo)
+    res.json(resultado);
 }
 
-export function crearCampo(req, res) {
-    const nuevo = campo.crearCampo(req.body ?? {});
-    res.status(201).location(`/api/campos/${nuevo.id}`).json(nuevo);
+export async function crearCampo(req, res) {
+    const nuevo = await campo.crearCampo(req.body ?? {});
+    res.status(201).location(`/api/campos/${nuevo._id}`).json(nuevo);
 }
 
-export function eliminarCampo (req, res){
-    campo.eliminarCampo(req.idCampo);
+export async function eliminarCampo (req, res){
+    const resultado = await campo.eliminarCampo(req.idCampo);
     res.status(204).end();
 }
 
-export function modificarCampo(req,res){
-    res.json(campo.modificarCampo(req.idCampo, req.body ?? {}));
+export async function modificarCampo(req,res){
+    const resultado = await campo.modificarCampo(req.idCampo, req.body ?? {});
 }
 
-export function organizarCampo (req, res){
-    const resultado = campo.organizarCampo(req.idCampo);
-    return res.json(resultado);
+export async function organizarCampo (req, res){
+    const resultado = await campo.organizarCampo(req.idCampo);
+    res.json(resultado);
 }

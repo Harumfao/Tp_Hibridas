@@ -5,9 +5,11 @@
   "private": true,
   "scripts": {
     "dev": "node --watch --env-file=.env src/servidor.js",
-    "start": "node --env-file=.env src/servidor.js"
+    "start": "node --env-file=.env src/servidor.js",
+    "seed": "node --env-file=.env src/seed.js"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mongoose": "^9.11.2"
   }
 }

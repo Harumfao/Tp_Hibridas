@@ -11,6 +11,7 @@ export const config = {
   puerto: Number(process.env.PUERTO ?? 3000),
   entorno: process.env.NODE_ENV ?? 'development',
   claveAdmin: obligatorio('CLAVE_ADMIN'),
+  dbUrl: process.env.MONGODB_URL
 };
 
 export const esProduccion = config.entorno === 'production';

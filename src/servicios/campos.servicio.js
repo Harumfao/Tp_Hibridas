@@ -1,54 +1,64 @@
-import { camposIniciales, siguienteId } from '../../datos.js';
+import {Campo} from '../model/campo.modelo.js'
 
-const camposModificable = ['nombre','ubicacion','contacto','descripcion','horario']
+const camposModificable = ['nombre','tamano','ubicacion','contacto','descripcion','horario']
 
-export function listar({ubicacion}={}) {
-    let resultado = camposIniciales;
+export async function listar({ubicacion,tamano,disponibilidad}={}) {
+    const query = {};
     if (ubicacion) {
-        resultado = resultado.filter((c) => c.ubicacion === ubicacion);
+        query.ubicacion = ubicacion.toLowerCase();
     }
-    return resultado;
+
+    if (tamano){
+        if (tamano == "mediano" ){
+            query.tamano = tamano === 'mediano';
+        }
+        if (tamano == "grande"){
+            query.tamano = tamano === 'grande';
+        }
+    }
+
+    if (disponibilidad){
+        query.disponibilidad = disponibilidad === true
+    }
+    return await Campo.find(query);
 }
 
-export function obtenerCampo(id){
-    const campos = camposIniciales.find((c) => c.id === id);
-    return campos
+export async function obtenerCampo(id){
+    return await Campo.findById(id);
 }
 
-export function crearCampo(datos){
-    const nuevo = {
+export async function crearCampo(datos){
+    const nuevo = new Campo({
         id: siguienteId(),
-        nombre: datos.nombre.toLowerCase(),
-        ubicacion: datos.ubicacion.toLowerCase(),
+        nombre: datos.nombre?.toLowerCase(),
+        tamano: datos.tamano?.toLowerCase(),
+        ubicacion: datos.ubicacion?.toLowerCase(),
         contacto: typeof datos.contacto === 'number' ? datos.contacto : null,
-        descripcion: datos.descripcion.toLowerCase(),
+        descripcion: datos.descripcion?.toLowerCase(),
         creacion: new Date().toISOString().split('T')[0],
-        horario: datos.horario.toLowerCase(),
+        horario: datos.horario?.toLowerCase(),
         verificado: false,
         disponibilidad: true
-    };
+    });
 
-    camposIniciales.push(nuevo);
-    return nuevo;
+    return await nuevo.save();
 }
 
-export function eliminarCampo(id) {
-    const campo = obtenerCampo(id);
-    camposIniciales.splice(camposIniciales.indexOf(campo),1);
+export async function eliminarCampo(id) {
+    return await Campo.findByIdAndDelete(id);
 }
 
-export function modificarCampo(id, modificacion){
-    const camposIniciales = obtenerCampo (id);
+export async function modificarCampo(id, modificacion){
     const modificaciones = Object.entries(modificacion).filter(([clave]) => camposModificable.includes(clave))
-    const campoModificado = {...camposIniciales, ...Object.fromEntries(modificaciones)};
-    Object.assign(camposIniciales,campoModificado);
-    return camposIniciales;
+    const campoModificado = Object.fromEntries(modificaciones);
+    return await Campo.findByIdAndUpdate(id,campoModificado,{new:true,runValidators:true});
 }
 
-export function organizarCampo (id){
-    const campo = obtenerCampo(id);
+export async function organizarCampo (id){
+    const campo = await Campo.findById(id);
     if (campo.disponibilidad === true) {
         campo.disponibilidad = false;
+        await campo.save();
         return {mensaje:`Alquilaste el campo ${campo.nombre}`}
-    }
+    } 
 }
