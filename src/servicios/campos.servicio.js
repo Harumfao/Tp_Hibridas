@@ -9,16 +9,13 @@ export async function listar({ubicacion,tamano,disponibilidad}={}) {
     }
 
     if (tamano){
-        if (tamano == "mediano" ){
-            query.tamano = tamano === 'mediano';
-        }
-        if (tamano == "grande"){
-            query.tamano = tamano === 'grande';
+        if (tamano == "chico" || tamano == "mediano" || tamano == "grande"){
+            query.tamano = tamano.toLowerCase();
         }
     }
 
     if (disponibilidad !== undefined) {
-        query.disponibilidad = disponibilidad === true
+        query.disponibilidad = disponibilidad === true;
     }
     return await Campo.find(query);
 }

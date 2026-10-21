@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose';
 
 const campoSchema = new Schema({
-    nombre: { type: String, required: true, lowercase: true, trim: true, minlength: 5, maxlength: 50 },
-    tamano: { type: String, required: true, lowercase: true, trim: true },
+    nombre: { type: String, required: true, unique: true, lowercase: true, trim: true, minlength: 5, maxlength: 50 },
+    tamano: { type: String, required: true, enum: ['chico','mediano','grande'], lowercase: true, trim: true },
     ubicacion: { type: String, required: true, lowercase: true, trim: true },
     contacto: { type: Number, default: null },
     descripcion: { type: String, required: true, lowercase: true, trim: true, maxlength: 155 },
