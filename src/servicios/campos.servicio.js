@@ -17,7 +17,7 @@ export async function listar({ubicacion,tamano,disponibilidad}={}) {
         }
     }
 
-    if (disponibilidad){
+    if (disponibilidad !== undefined) {
         query.disponibilidad = disponibilidad === true
     }
     return await Campo.find(query);
@@ -29,7 +29,6 @@ export async function obtenerCampo(id){
 
 export async function crearCampo(datos){
     const nuevo = new Campo({
-        id: siguienteId(),
         nombre: datos.nombre?.toLowerCase(),
         tamano: datos.tamano?.toLowerCase(),
         ubicacion: datos.ubicacion?.toLowerCase(),

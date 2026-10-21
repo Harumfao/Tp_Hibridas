@@ -5,12 +5,18 @@ import { config } from './config.js';
 const app = crearApp();
 
 async function iniciarDB() {
-  await mongoose.connect(config.dbUrl)
-  console.log('Conectado correctamente a MongoDB')
-}
+  try {
+    await mongoose.connect(config.dbUrl)
+    console.log('Conectado correctamente a MongoDB');
+ 
 
 app.listen(config.puerto, () => {
   console.log(`Escuchando localhost:${config.puerto} (${config.entorno})`);
 });
+} catch (error) {
+    console.error('Error al conectar a MongoDB', error);
+    process.exit(1);
+  }
+  }
 
 iniciarDB()
