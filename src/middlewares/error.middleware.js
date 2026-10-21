@@ -2,7 +2,7 @@ export function manejadorErrores(err, req, res, next) {
     console.error('Error en el centralizador:', err);
     
     if (err.name === 'ValidationError') {
-        res.status(400).json({ error: 'Error de validación', detalles: err.message });
+        res.status(422).json({ error: 'Error de validación', detalles: err.message });
     }
 
     if (err.name === 'CastError') {
