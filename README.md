@@ -18,7 +18,7 @@ Requisitos: Node.js 20.6 o posterior, npm y MongoDB.
 1. Instalá dependencias: `npm install`
 2. Copiá `.env.example` como `.env` y completá sus valores.
 3. Iniciá la API: `npm run dev` (desarrollo) o `npm start`.
-4. Opcional: cargá los datos de ejemplo con `npm run seed`. **Esto borra los campos existentes antes de cargar la seed.**
+4. Opcional: cargá los datos de ejemplo con `npm run allseeds`. **Esto borra los campos existentes antes de cargar la seed.**
 
 ## Variables
 
