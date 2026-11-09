@@ -1,4 +1,5 @@
 import {Campo} from '../model/campo.modelo.js'
+import { User } from '../model/user.modelo.js';
 
 const camposModificable = ['nombre','tamano','ubicacion','contacto','descripcion','horario']
 
@@ -21,7 +22,7 @@ export async function listar({ubicacion,tamano,disponibilidad}={}) {
 }
 
 export async function obtenerCampo(id){
-    return await Campo.findById(id);
+    return await Campo.findById(id).populate('admin', 'nombre biografia creacion');
 }
 
 export async function crearCampo(datos){

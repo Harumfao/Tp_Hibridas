@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 
 const campoSchema = new Schema({
-    nombre: { type: String, required: true, unique: true, lowercase: true, trim: true, minlength: 5, maxlength: 50 },
+    nombre: { type: String, required: true, unique: true, lowercase: true, trim: true, minlength: 4 , maxlength: 50 },
     tamano: { type: String, required: true, enum: ['chico','mediano','grande'], lowercase: true, trim: true },
     ubicacion: { type: String, required: true, lowercase: true, trim: true },
     contacto: { type: Number, default: null },
@@ -9,7 +9,11 @@ const campoSchema = new Schema({
     creacion: { type: String, default: () => new Date().toISOString().split('T')[0] },
     horario: { type: String, required: true, lowercase: true, trim: true },
     verificado: { type: Boolean, default: false },
-    disponibilidad: { type: Boolean, default: true }
+    disponibilidad: { type: Boolean, default: true },
+    admin: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 }, {
     versionKey: false
 });
