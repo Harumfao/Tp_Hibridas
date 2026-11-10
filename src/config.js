@@ -11,7 +11,11 @@ export const config = {
   puerto: Number(process.env.PUERTO ?? 3000),
   entorno: process.env.NODE_ENV ?? 'development',
   claveAdmin: obligatorio('CLAVE_ADMIN'),
-  dbUrl: process.env.MONGODB_URL
+  dbUrl: process.env.MONGODB_URL,
+  origenesPermitidos: (process.env.FRONTEND_URL ?? 'http://localhost:5173')
+  .split(',')
+  .map((origen) => origen.trim()),
+  conCors: !process.argv.includes('--sin-cors'),
 };
 
 export const esProduccion = config.entorno === 'production';

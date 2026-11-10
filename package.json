@@ -11,6 +11,7 @@
     "allseeds": "node --env-file=.env src/userSeed.js && node --env-file=.env src/seed.js"
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "express": "^5.2.1",
     "mongoose": "^9.11.2"
   }

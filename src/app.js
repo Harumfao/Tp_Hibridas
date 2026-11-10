@@ -3,6 +3,8 @@ import {rutasDeCampos} from './rutas/campos_rutas.js';
 import {registroMiddleware} from './middlewares/registro.middleware.js';
 import {rutaNoEncontrada} from './middlewares/404.middleware.js';
 import {manejadorErrores} from './middlewares/error.middleware.js';
+import { config } from './config.js';
+import cors from 'cors';
 
 export function crearApp() {
 const app = express();
@@ -10,6 +12,9 @@ const app = express();
 app.use(express.json());
 app.use(registroMiddleware);
 
+if (config.conCors) {
+    app.use(cors({ origin: config.origenesPermitidos,}));
+}
 
 //Rutas
 app.use('/api/campos', rutasDeCampos);

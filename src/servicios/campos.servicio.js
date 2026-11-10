@@ -18,7 +18,7 @@ export async function listar({ubicacion,tamano,disponibilidad}={}) {
     if (disponibilidad !== undefined) {
         query.disponibilidad = disponibilidad === true;
     }
-    return await Campo.find(query);
+    return await Campo.find(query).populate('admin', 'nombre biografia creacion');
 }
 
 export async function obtenerCampo(id){
