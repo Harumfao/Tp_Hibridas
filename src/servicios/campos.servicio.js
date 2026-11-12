@@ -18,11 +18,11 @@ export async function listar({ubicacion,tamano,disponibilidad}={}) {
     if (disponibilidad !== undefined) {
         query.disponibilidad = disponibilidad === true;
     }
-    return await Campo.find(query).populate('admin', 'nombre biografia creacion');
+    return await Campo.find(query).populate('admin', 'nombre creacion');
 }
 
 export async function obtenerCampo(id){
-    return await Campo.findById(id).populate('admin', 'nombre biografia creacion');
+    return await Campo.findById(id).populate('admin', 'nombre creacion');
 }
 
 export async function crearCampo(datos){
@@ -35,7 +35,8 @@ export async function crearCampo(datos){
         creacion: new Date().toISOString().split('T')[0],
         horario: datos.horario?.toLowerCase(),
         verificado: false,
-        disponibilidad: true
+        disponibilidad: true,
+        admin: datos.admin
     });
 
     return await nuevo.save();

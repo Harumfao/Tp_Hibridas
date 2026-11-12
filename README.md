@@ -1,62 +1,132 @@
-# API de campos de airsoft
+# StrikeAr: campos de airsoft
 
-API REST para consultar y administrar campos de airsoft. Usa MongoDB para guardar los datos.
+Aplicación web para consultar y administrar campos de airsoft. El proyecto incluye una API REST con Express y MongoDB, y una interfaz React construida con Vite.
 
-## Integrandes: 
-Alejo Ezequiel Fernandez (Rutas, controladores, MongoDB y servicios).
-Milagros Fernandez (Manejo de errores, validaciones, Middleware).
+## Integrantes
 
-## Dependencias
+- Alejo Ezequiel Fernandez: rutas, controladores, MongoDB y servicios.
+- Milagros Fernandez: manejo de errores, validaciones, middleware, cuentas, roles, front.
+## Requisitos
 
-- `express`: `^5.2.1`
-- `mongoose`: `^9.11.2`
+- Node.js compatible con las versiones instaladas de Express y Vite.
+- npm.
+- MongoDB local o una URI de MongoDB Atlas.
 
-## Instalar y ejecutar
+## Configuración
 
-Requisitos: Node.js 20.6 o posterior, npm y MongoDB.
+### API
 
-1. Instalá dependencias: `npm install`
-2. Copiá `.env.example` como `.env` y completá sus valores.
-3. Iniciá la API: `npm run dev` (desarrollo) o `npm start`.
-4. Opcional: cargá los datos de ejemplo con `npm run allseeds`. **Esto borra los campos existentes antes de cargar la seed.**
-
-## Variables
-
-| Variable | Uso |
-| --- | --- |
-| `MONGODB_URL` | URI de conexión a MongoDB. Requerida. |
-| `CLAVE_ADMIN` | Clave para las rutas protegidas. Requerida. |
-| `PUERTO` | Puerto del servidor; por defecto `3000`. |
-| `NODE_ENV` | Entorno; por defecto `development`. |
-
-Ejemplo:
+Desde la carpeta raíz, instala las dependencias y crea el archivo `.env` a partir de `.env.example`. Completa los valores locales:
 
 ```dotenv
-MONGODB_URL=mongodb://127.0.0.1:27017/campos
-CLAVE_ADMIN=una-clave-local
 PUERTO=3000
 NODE_ENV=development
+MONGODB_URL=mongodb://127.0.0.1:27017/strikear
+CLAVE_ADMIN=una-clave-local
+JWT_SECRET=reemplazar-por-un-secreto-largo-y-aleatorio
+FRONTEND_URL=http://localhost:5173
 ```
 
-## Rutas
+`FRONTEND_URL` acepta uno o varios orígenes separados por comas, sin rutas. Por ejemplo: `http://localhost:5173,https://mi-sitio.example`.
+`CLAVE_ADMIN` sigue siendo necesaria para iniciar la API según la configuración actual; las rutas de escritura documentadas en este README se autorizan mediante JWT y rol, no mediante una API key.
 
-Base: `http://localhost:3000`. Las rutas marcadas con 🔒 requieren el encabezado `x-api-key: una-clave-local`.
+```bash
+npm install
+npm run dev
+```
 
-| Método y ruta | Ejemplo |
-| --- | --- |
-| `GET /api/salud` | `curl http://localhost:3000/api/salud` |
-| `GET /api/campos` | `curl "http://localhost:3000/api/campos?ubicacion=quilmes&tamano=grande"` |
-| `GET /api/campos/:id` | `curl http://localhost:3000/api/campos/671234567890abcdef123456` |
-| `POST /api/campos` 🔒 | `curl -X POST http://localhost:3000/api/campos -H "x-api-key: una-clave-local" -H "Content-Type: application/json" -d "{\"nombre\":\"Campo Norte\",\"tamano\":\"mediano\",\"ubicacion\":\"quilmes\",\"descripcion\":\"predio arbolado\",\"horario\":\"10 a 22\"}"` |
-| `PATCH /api/campos/:id` 🔒 | `curl -X PATCH http://localhost:3000/api/campos/671234567890abcdef123456 -H "x-api-key: una-clave-local" -H "Content-Type: application/json" -d "{\"horario\":\"09 a 20\"}"` |
-| `DELETE /api/campos/:id` 🔒 | `curl -X DELETE http://localhost:3000/api/campos/671234567890abcdef123456 -H "x-api-key: una-clave-local"` |
-| `POST /api/campos/:id/organizar` 🔒 | `curl -X POST http://localhost:3000/api/campos/671234567890abcdef123456/organizar -H "x-api-key: una-clave-local"` |
+La API escucha por defecto en `http://localhost:3000`. Para ejecutarla sin el modo de recarga automática usa `npm start`.
 
-`POST` requiere `nombre`, `tamano` (`chico`, `mediano` o `grande`), `ubicacion`, `descripcion` y `horario`. `PATCH` permite modificar esos campos y `contacto`.
+### Frontend
 
-## Decisiones
+En otra terminal, desde `mi-app/`:
 
-1. **MongoDB y Mongoose:** persistencia y validación de los campos.
-2. **Rutas, controladores y servicio separados:** responsabilidades claras y código organizado.
-3. **Clave de administrador para modificar datos:** restringe las operaciones de escritura a clientes autorizados.
-4. **Disponibilidad de cada campo:** se representa con un valor booleano que cambia al alquilarlo. Esto deja preparada la API para que, en el futuro, los usuarios puedan sumarse automáticamente a partidas públicas en campos disponibles.
+```bash
+npm install
+npm run dev
+```
+
+Vite muestra la URL local del frontend (por defecto `http://localhost:5173`). La aplicación usa `http://localhost:3000` como API por defecto. Para cambiarla, crea `mi-app/.env`:
+
+```dotenv
+VITE_API_URL=http://localhost:3000
+```
+
+Validaciones del frontend:
+
+```bash
+npm run lint
+npm run build
+```
+
+## Funcionalidad
+
+- Catálogo de campos obtenido desde la API, con filtro por ubicación enviado como parámetro de consulta.
+- Registro con contraseña derivada mediante `scrypt` y sal aleatoria; las respuestas no incluyen contraseña ni sal.
+- Inicio de sesión que devuelve un JWT con expiración de cuatro horas.
+- El registro público siempre crea usuarios con rol `usuario`; no acepta que el cliente asigne `admin`.
+- Relación entre campos y usuarios mediante `Campo.admin`, referencia a `User`. Al crear un campo, se guarda el usuario autenticado. Las consultas de listado y detalle usan `populate` y exponen del usuario relacionado solo `nombre` y `creacion`.
+- Interfaz con portada, catálogo, inicio de sesión y registro.
+
+## Autenticación y roles
+
+Las rutas protegidas esperan el JWT en el encabezado:
+
+```http
+Authorization: Bearer {jwt}
+```
+
+- Sin token o con token inválido/expirado: `401 Unauthorized`.
+- Token válido sin rol `admin` en una ruta exclusiva de administración: `403 Forbidden`.
+- Crear un campo requiere una sesión válida.
+- Modificar, eliminar, organizar campos y promover usuarios requiere rol `admin`.
+
+El primer administrador debe crearse manualmente en MongoDB, asignando `rol: "admin"` a una cuenta registrada. Luego un administrador autenticado puede promover otro usuario:
+
+```http
+PATCH /api/auth/usuarios/:id/admin
+Authorization: Bearer {jwt-de-admin}
+```
+
+## Rutas de la API
+
+Base local: `http://localhost:3000`.
+
+| Método | Ruta | Acceso | Descripción |
+| --- | --- | --- | --- |
+| `GET` | `/api/salud` | Público | Estado del servidor. |
+| `GET` | `/api/campos` | Público | Lista campos; admite filtros `ubicacion`, `tamano` y `disponibilidad`. |
+| `GET` | `/api/campos/:id` | Público | Obtiene un campo por ID. |
+| `POST` | `/api/campos` | Sesión | Crea un campo asociado al usuario autenticado. |
+| `PATCH` | `/api/campos/:id` | Admin | Modifica los campos permitidos. |
+| `DELETE` | `/api/campos/:id` | Admin | Elimina un campo. |
+| `POST` | `/api/campos/:id/organizar` | Admin | Cambia la disponibilidad del campo. |
+| `POST` | `/api/auth/registro` | Público | Registra un usuario con rol `usuario`. |
+| `POST` | `/api/auth/login` | Público | Valida credenciales y devuelve un JWT. |
+| `PATCH` | `/api/auth/usuarios/:id/admin` | Admin | Promueve un usuario a administrador. |
+
+Para crear un campo, el cuerpo JSON requiere `nombre`, `tamano` (`chico`, `mediano` o `grande`), `ubicacion`, `descripcion` y `horario`. El `admin` relacionado se toma del JWT, no del cuerpo enviado por el cliente.
+
+Ejemplo de registro:
+
+```json
+{
+  "nombre": "Nombre de usuario",
+  "email": "persona@example.com",
+  "password": "una-contraseña"
+}
+```
+
+## Datos de ejemplo
+
+`npm run seed` elimina los campos actuales antes de insertar los datos de ejemplo y requiere que existan al menos tres usuarios en MongoDB. Úsalo solo en una base de desarrollo que se pueda borrar.
+
+El script `userseed` es anterior al esquema actual de usuarios y no debe usarse para crear cuentas. Registra usuarios desde la interfaz o desde `POST /api/auth/registro`.
+
+## Estructura principal
+
+```text
+src/                  API Express, modelos, rutas, controladores y servicios
+mi-app/src/           Aplicación React/Vite
+pruebas/              Capturas de pruebas manuales de la API
+```

@@ -21,7 +21,10 @@ export async function obtenerCampo(req, res, next){
 
 export async function crearCampo(req, res, next) {
     try {
-        const nuevo = await campo.crearCampo(req.body ?? {});
+        const nuevo = await campo.crearCampo({
+            ...(req.body ?? {}),
+            admin: req.user.id
+        });
         res.status(201).location(`/api/campos/${nuevo._id}`).json(nuevo);
     } catch (error) {
         next(error);
